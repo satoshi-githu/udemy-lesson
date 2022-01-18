@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { products } from '../../products';
+import { ProductService } from '../shared/product.service';
+
+
 
 
 @Component({
@@ -9,12 +11,41 @@ import { products } from '../../products';
 })
 export class ProductListComponent implements OnInit {
 
-  products: any = [1,2,3,4];
+  products: any;
 
-  constructor() { }
+  constructor(private productService: ProductService) { }
 
   ngOnInit(): void {
-    this.products = products;
+    // this.products = this.productService.getProsucts();
+
+    const productObservable = this.productService.getProducts();
+    productObservable.subscribe(
+      (data) => {
+        this.products = data;
+      },
+      (err) => { console.error('something wrong occurred: ' + err);}
+    )
+    // const observable = new Observable(subscriber => {
+    //   subscriber.next('aho');
+    //   subscriber.next('boke');
+    //   subscriber.next ('kasu');
+    //   setTimeout(() => {
+    //     subscriber.next('sine');
+    //     subscriber.complete();
+    //   }, 3000);
+    // });
+
+
+    // console.log('just before subscribe');
+
+    //  observable.subscribe({
+    //   next(x) { console.log('got value ' + x); },
+    //   error(err) { console.error('something wrong occurred: ' + err); },
+    //   complete() { console.log('done'); }
+    // });
+
+    // console.log('just after subscribe');
+
   }
 
 }
