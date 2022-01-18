@@ -5,6 +5,9 @@ const config = require('./config/dev');
 const FakeDb = require('./fake-db');
 const app = express()
 
+const path = require('path');
+const { fileURLToPath } = require('url');
+
 
 
 mongoose.connect(config.DB_URI).then(
@@ -15,6 +18,12 @@ mongoose.connect(config.DB_URI).then(
 );
 
 app.use('/api/v1/products', productRoutes)
+
+const appPath = path.join( __dirname, '..', 'dist', 'udemy-lesson')
+app.use(express.static(appPath))
+app.get("*", function(req, res) {
+ res.sendFile(path.resolve(appPath, 'index.html'))
+})
 
 const port = process.env.PORT || "3001";
 
